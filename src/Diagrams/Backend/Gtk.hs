@@ -1,7 +1,7 @@
 {-# LANGUAGE CPP #-}
 -----------------------------------------------------------------------------
 -- |
--- Module      :  Diagrams.Backend.Cairo.Gtk
+-- Module      :  Diagrams.Backend.Gtk
 -- Copyright   :  (c) 2011 Diagrams-cairo team (see LICENSE)
 -- License     :  BSD-style (see LICENSE)
 -- Maintainer  :  diagrams-discuss@googlegroups.com
@@ -11,14 +11,14 @@
 --
 -----------------------------------------------------------------------------
 
-module Diagrams.Backend.Cairo.Gtk
+module Diagrams.Backend.Gtk
        ( defaultRender
        , toGtkCoords
        , renderToGtk
        ) where
 
 import Diagrams.Prelude hiding (width, height)
-import Diagrams.Backend.Cairo
+import Diagrams.Backend.Cairo as Cairo
 
 -- Below hack is needed because GHC 7.0.x has a bug regarding export
 -- of data family constructors; see comments in Diagrams.Backend.Cairo
@@ -27,6 +27,7 @@ import Diagrams.Backend.Cairo.Internal
 #endif
 
 import Graphics.UI.Gtk
+import qualified Graphics.UI.Gtk.Cairo as CG
 
 -- | Convert a Diagram to the backend coordinates.
 --
@@ -44,7 +45,7 @@ import Graphics.UI.Gtk
 toGtkCoords :: Monoid' m => QDiagram Cairo R2 m -> QDiagram Cairo R2 m
 toGtkCoords d = snd $
   adjustDia Cairo
-            (CairoOptions "" Absolute (GTK (undefined :: DrawWindow) False))
+            (CairoOptions "" Absolute RenderOnly False)
             d
 
 -- | Render a diagram to a DrawingArea, rescaling to fit the full area.
@@ -52,19 +53,35 @@ defaultRender :: Monoid' m => DrawingArea -> QDiagram Cairo R2 m -> IO ()
 defaultRender da d = do
   (w,h) <- widgetGetSize da
   dw <- widgetGetDrawWindow da
-  fst $ renderDia Cairo (CairoOptions "" (Dims (fromIntegral w) (fromIntegral h))
-                                         (GTK dw False)
-                        )
-        d
+  let r = snd $ renderDia Cairo
+                  (CairoOptions
+                     { cairoFileName     = ""
+                     , cairoSizeSpec     = Dims (fromIntegral w) (fromIntegral h)
+                     , cairoOutputType   = RenderOnly
+                     , cairoBypassAdjust = False
+                     }
+                  )
+                  d
+  CG.renderWithDrawable dw r
 
--- | Render a diagram to a DrawableClass.  No rescaling or transformations
--- will be performed.
+-- | Render a diagram to a 'DrawableClass'.  No rescaling or
+--   transformations will be performed.
 --
--- Typically the diagram will already have been transformed by `toGtkCoords`.
+--   Typically the diagram will already have been transformed by
+--   'toGtkCoords'.
 renderToGtk ::
   (DrawableClass dc, Monoid' m)
   => dc                     -- ^ widget to render onto
   -> QDiagram Cairo R2 m  -- ^ Diagram
   -> IO ()
-renderToGtk dc d =
-  fst $ renderDia Cairo (CairoOptions "" Absolute (GTK dc True)) d
+renderToGtk dc d = do
+  let r = snd $ renderDia Cairo
+                  (CairoOptions
+                     { cairoFileName     = ""
+                     , cairoSizeSpec     = Absolute
+                     , cairoOutputType   = RenderOnly
+                     , cairoBypassAdjust = True
+                     }
+                  )
+                  d
+  CG.renderWithDrawable dc r
