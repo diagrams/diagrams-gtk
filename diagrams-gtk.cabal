@@ -1,7 +1,8 @@
 name:                diagrams-gtk
 version:             0.6
 synopsis:            Backend for rendering diagrams directly to GTK windows
-description:         XXX
+description:         An optional add-on to the diagrams-cairo package
+                     which allows rendering diagrams directly to GTK windows.
 homepage:            http://projects.haskell.org/diagrams/
 license:             BSD3
 license-file:        LICENSE
