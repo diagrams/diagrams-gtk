@@ -11,3 +11,10 @@ before_install:
   - cabal install monoid-extras/ dual-tree/ diagrams-core/ diagrams-lib/ gtk2hs-buildtools
   - cabal install diagrams-cairo/
   - cd ..
+notifications:
+  irc:
+    channels:
+      - irc.freenode.org#diagrams
+    skip_join: true
+    template:
+      - "\x0313diagrams-gtk\x03/\x0306%{branch}\x03 \x0314%{commit}\x03 %{build_url} %{message}"
