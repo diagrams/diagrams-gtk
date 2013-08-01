@@ -21,7 +21,7 @@ source-repository head
 
 library
   exposed-modules:     Diagrams.Backend.Gtk
-  build-depends:       base >= 4.2 && < 4.7,
+  build-depends:       base >= 4.2 && < 4.8,
                        diagrams-lib >= 0.6 && < 0.8,
                        diagrams-cairo >= 0.6 && < 0.8,
                        gtk >= 0.12.0 && < 0.13
