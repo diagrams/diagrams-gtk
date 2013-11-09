@@ -55,10 +55,10 @@ defaultRender da d = do
   dw <- widgetGetDrawWindow da
   let r = snd $ renderDia Cairo
                   (CairoOptions
-                     { cairoFileName     = ""
-                     , cairoSizeSpec     = Dims (fromIntegral w) (fromIntegral h)
-                     , cairoOutputType   = RenderOnly
-                     , cairoBypassAdjust = False
+                     { _cairoFileName     = ""
+                     , _cairoSizeSpec     = Dims (fromIntegral w) (fromIntegral h)
+                     , _cairoOutputType   = RenderOnly
+                     , _cairoBypassAdjust = False
                      }
                   )
                   d
@@ -77,10 +77,10 @@ renderToGtk ::
 renderToGtk dc d = do
   let r = snd $ renderDia Cairo
                   (CairoOptions
-                     { cairoFileName     = ""
-                     , cairoSizeSpec     = Absolute
-                     , cairoOutputType   = RenderOnly
-                     , cairoBypassAdjust = True
+                     { _cairoFileName     = ""
+                     , _cairoSizeSpec     = Absolute
+                     , _cairoOutputType   = RenderOnly
+                     , _cairoBypassAdjust = True
                      }
                   )
                   d
