@@ -1,5 +1,5 @@
 name:                diagrams-gtk
-version:             0.6.0.1
+version:             1.0
 synopsis:            Backend for rendering diagrams directly to GTK windows
 description:         An optional add-on to the diagrams-cairo package
                      which allows rendering diagrams directly to GTK windows.
@@ -22,8 +22,8 @@ source-repository head
 library
   exposed-modules:     Diagrams.Backend.Gtk
   build-depends:       base >= 4.2 && < 4.8,
-                       diagrams-lib >= 0.6 && < 0.8,
-                       diagrams-cairo >= 0.6 && < 0.8,
+                       diagrams-lib >= 1.0 && < 1.1,
+                       diagrams-cairo >= 1.0 && < 1.1,
                        gtk >= 0.12.0 && < 0.13
   hs-source-dirs:      src
   default-language:    Haskell2010
