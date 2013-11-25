@@ -1,3 +1,8 @@
+1.0: 25 November 2013
+---------------------
+
+* Updated to work with diagrams-cairo-1.0.
+
 0.6.0.1: 1 August 2013
 ----------------------
 
