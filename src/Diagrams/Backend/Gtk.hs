@@ -27,7 +27,7 @@ import Diagrams.Backend.Cairo.Internal
 #endif
 
 import Graphics.UI.Gtk
-import qualified Graphics.UI.Gtk.Cairo as CG
+import qualified Graphics.Rendering.Cairo as CG
 
 -- | Convert a Diagram to the backend coordinates.
 --
@@ -50,19 +50,16 @@ toGtkCoords d = snd $
 
 -- | Render a diagram to a DrawingArea, rescaling to fit the full area.
 defaultRender :: Monoid' m => DrawingArea -> QDiagram Cairo R2 m -> IO ()
-defaultRender da d = do
-  (w,h) <- widgetGetSize da
-  dw <- widgetGetDrawWindow da
-  let r = snd $ renderDia Cairo
-                  (CairoOptions
-                     { _cairoFileName     = ""
-                     , _cairoSizeSpec     = Dims (fromIntegral w) (fromIntegral h)
-                     , _cairoOutputType   = RenderOnly
-                     , _cairoBypassAdjust = False
-                     }
-                  )
-                  d
-  CG.renderWithDrawable dw r
+defaultRender drawingarea diagram = do
+  drawWindow <- (widgetGetDrawWindow drawingarea)
+  renderDoubleBuffered drawWindow opts diagram
+    where opts w h = (CairoOptions
+              { _cairoFileName     = ""
+              , _cairoSizeSpec     = Dims (fromIntegral w) (fromIntegral h)
+              , _cairoOutputType   = RenderOnly
+              , _cairoBypassAdjust = False
+              }
+           )
 
 -- | Render a diagram to a 'DrawableClass'.  No rescaling or
 --   transformations will be performed.
@@ -74,14 +71,44 @@ renderToGtk ::
   => dc                     -- ^ widget to render onto
   -> QDiagram Cairo R2 m  -- ^ Diagram
   -> IO ()
-renderToGtk dc d = do
-  let r = snd $ renderDia Cairo
-                  (CairoOptions
-                     { _cairoFileName     = ""
-                     , _cairoSizeSpec     = Absolute
-                     , _cairoOutputType   = RenderOnly
-                     , _cairoBypassAdjust = True
-                     }
-                  )
-                  d
-  CG.renderWithDrawable dc r
+renderToGtk drawable = do renderDoubleBuffered drawable opts
+  where opts _ _ = (CairoOptions
+                    { _cairoFileName     = ""
+                    , _cairoSizeSpec     = Absolute
+                    , _cairoOutputType   = RenderOnly
+                    , _cairoBypassAdjust = True
+                    }
+                   )
+
+
+-- | Render a diagram onto a 'DrawableClass' using the given CairoOptions.
+--
+--   This uses cairo double-buffering.
+renderDoubleBuffered ::
+  (Monoid' m, DrawableClass dc) =>
+  dc -- ^ drawable to render onto
+  -> (Int -> Int -> Options Cairo R2) -- ^ options, depending on drawable width and height
+  -> QDiagram Cairo R2 m -- ^ Diagram
+  -> IO ()
+renderDoubleBuffered drawable renderOpts diagram = do
+  (w,h) <- drawableGetSize drawable
+  let opts = renderOpts w h
+      render = delete w h >> snd (renderDia Cairo opts diagram)
+  renderWithDrawable drawable (doubleBuffer render)
+
+
+-- | White rectangle of size (w,h).
+-- 
+--   Used to clear canvas when using double buffering.
+delete w h = do
+  CG.setSourceRGB 1 1 1
+  CG.rectangle 0 0 (fromIntegral w) (fromIntegral h)
+  CG.fill
+
+
+-- | Wrap the given render action in double buffering.
+doubleBuffer render = do
+  CG.pushGroup
+  render
+  CG.popGroupToSource
+  CG.paint 
