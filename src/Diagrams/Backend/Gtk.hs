@@ -93,13 +93,14 @@ renderDoubleBuffered ::
 renderDoubleBuffered drawable renderOpts diagram = do
   (w,h) <- drawableGetSize drawable
   let opts = renderOpts w h
-      render = delete w h >> snd (renderDia Cairo opts diagram)
-  renderWithDrawable drawable (doubleBuffer render)
+      renderAction = delete w h >> snd (renderDia Cairo opts diagram)
+  renderWithDrawable drawable (doubleBuffer renderAction)
 
 
 -- | White rectangle of size (w,h).
 -- 
 --   Used to clear canvas when using double buffering.
+delete :: Int -> Int -> CG.Render ()
 delete w h = do
   CG.setSourceRGB 1 1 1
   CG.rectangle 0 0 (fromIntegral w) (fromIntegral h)
@@ -107,8 +108,9 @@ delete w h = do
 
 
 -- | Wrap the given render action in double buffering.
-doubleBuffer render = do
+doubleBuffer :: CG.Render () -> CG.Render ()
+doubleBuffer renderAction = do
   CG.pushGroup
-  render
+  renderAction
   CG.popGroupToSource
   CG.paint 
