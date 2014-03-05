@@ -17,17 +17,17 @@ module Diagrams.Backend.Gtk
        , renderToGtk
        ) where
 
-import Diagrams.Prelude hiding (width, height)
-import Diagrams.Backend.Cairo as Cairo
+import           Diagrams.Backend.Cairo          as Cairo
+import           Diagrams.Prelude                hiding (height, width)
 
 -- Below hack is needed because GHC 7.0.x has a bug regarding export
 -- of data family constructors; see comments in Diagrams.Backend.Cairo
 #if __GLASGOW_HASKELL__ < 702 || __GLASGOW_HASKELL__ >= 704
-import Diagrams.Backend.Cairo.Internal
+import           Diagrams.Backend.Cairo.Internal
 #endif
 
-import Graphics.UI.Gtk
-import qualified Graphics.Rendering.Cairo as CG
+import qualified Graphics.Rendering.Cairo        as CG
+import           Graphics.UI.Gtk
 
 -- | Convert a Diagram to the backend coordinates.
 --
@@ -98,7 +98,7 @@ renderDoubleBuffered drawable renderOpts diagram = do
 
 
 -- | White rectangle of size (w,h).
--- 
+--
 --   Used to clear canvas when using double buffering.
 delete :: Int -> Int -> CG.Render ()
 delete w h = do
@@ -113,4 +113,4 @@ doubleBuffer renderAction = do
   CG.pushGroup
   renderAction
   CG.popGroupToSource
-  CG.paint 
+  CG.paint
