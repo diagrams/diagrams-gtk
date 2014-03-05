@@ -48,7 +48,8 @@ toGtkCoords d = snd $
             (CairoOptions "" Absolute RenderOnly False)
             d
 
--- | Render a diagram to a DrawingArea, rescaling to fit the full area.
+-- | Render a diagram to a DrawingArea with double buffering,
+--   rescaling to fit the full area.
 defaultRender :: Monoid' m => DrawingArea -> QDiagram Cairo R2 m -> IO ()
 defaultRender drawingarea diagram = do
   drawWindow <- (widgetGetDrawWindow drawingarea)
@@ -61,8 +62,8 @@ defaultRender drawingarea diagram = do
               }
            )
 
--- | Render a diagram to a 'DrawableClass'.  No rescaling or
---   transformations will be performed.
+-- | Render a diagram to a 'DrawableClass' with double buffering.  No
+--   rescaling or transformations will be performed.
 --
 --   Typically the diagram will already have been transformed by
 --   'toGtkCoords'.
