@@ -1,5 +1,5 @@
-1.0.1: XXX
-----------
+1.0.1: 8 March 2014
+-------------------
 
 * Use double buffering. Thanks to Jonas Haag for the patch.
 
