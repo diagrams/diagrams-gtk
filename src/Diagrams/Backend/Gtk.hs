@@ -43,7 +43,7 @@ import           Graphics.UI.Gtk
 -- `toGtkCoords` does no rescaling of the diagram, however it is centered in
 -- the window.
 toGtkCoords :: Monoid' m => QDiagram Cairo R2 m -> QDiagram Cairo R2 m
-toGtkCoords d = snd $
+toGtkCoords d = (\(_,_,d') -> d') $
   adjustDia Cairo
             (CairoOptions "" Absolute RenderOnly False)
             d
