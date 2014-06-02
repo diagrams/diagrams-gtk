@@ -1,3 +1,9 @@
+1.0.1.1: 2 Junw 2014
+-------------------
+
+* Allow `diagrams-lib-1.2`
+* Allow `diagrams-cairo-1.2`
+
 1.0.1: 8 March 2014
 -------------------
 
