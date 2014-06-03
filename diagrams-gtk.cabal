@@ -1,5 +1,5 @@
 name:                diagrams-gtk
-version:             1.0.1.1
+version:             1.0.1.2
 synopsis:            Backend for rendering diagrams directly to GTK windows
 description:         An optional add-on to the diagrams-cairo package
                      which allows rendering diagrams directly to GTK windows.
