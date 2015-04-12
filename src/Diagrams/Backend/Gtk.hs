@@ -37,26 +37,26 @@ import           Graphics.UI.Gtk
 -- > widget `on` buttonPressEvent $ tryEvent $ do
 -- >   click <- eventClick
 -- >   (x,y) <- eventCoordinates
--- >   let result = runQuery (query $ toGtkCoords myDiagram) (P (x,y))
+-- >   let result = runQuery (query $ toGtkCoords myDiagram) (x ^& y)
 -- >   do_something_with result
 --
 -- `toGtkCoords` does no rescaling of the diagram, however it is centered in
 -- the window.
-toGtkCoords :: Monoid' m => QDiagram Cairo R2 m -> QDiagram Cairo R2 m
+toGtkCoords :: Monoid' m => QDiagram Cairo V2 Double m -> QDiagram Cairo V2 Double m
 toGtkCoords d = (\(_,_,d') -> d') $
   adjustDia Cairo
-            (CairoOptions "" Absolute RenderOnly False)
+            (CairoOptions "" absolute RenderOnly False)
             d
 
 -- | Render a diagram to a DrawingArea with double buffering,
 --   rescaling to fit the full area.
-defaultRender :: Monoid' m => DrawingArea -> QDiagram Cairo R2 m -> IO ()
+defaultRender :: Monoid' m => DrawingArea -> QDiagram Cairo V2 Double m -> IO ()
 defaultRender drawingarea diagram = do
   drawWindow <- (widgetGetDrawWindow drawingarea)
   renderDoubleBuffered drawWindow opts diagram
     where opts w h = (CairoOptions
               { _cairoFileName     = ""
-              , _cairoSizeSpec     = Dims (fromIntegral w) (fromIntegral h)
+              , _cairoSizeSpec     = dims (V2 (fromIntegral w) (fromIntegral h))
               , _cairoOutputType   = RenderOnly
               , _cairoBypassAdjust = False
               }
@@ -70,12 +70,12 @@ defaultRender drawingarea diagram = do
 renderToGtk ::
   (DrawableClass dc, Monoid' m)
   => dc                     -- ^ widget to render onto
-  -> QDiagram Cairo R2 m  -- ^ Diagram
+  -> QDiagram Cairo V2 Double m  -- ^ Diagram
   -> IO ()
 renderToGtk drawable = do renderDoubleBuffered drawable opts
   where opts _ _ = (CairoOptions
                     { _cairoFileName     = ""
-                    , _cairoSizeSpec     = Absolute
+                    , _cairoSizeSpec     = absolute
                     , _cairoOutputType   = RenderOnly
                     , _cairoBypassAdjust = True
                     }
@@ -88,8 +88,8 @@ renderToGtk drawable = do renderDoubleBuffered drawable opts
 renderDoubleBuffered ::
   (Monoid' m, DrawableClass dc) =>
   dc -- ^ drawable to render onto
-  -> (Int -> Int -> Options Cairo R2) -- ^ options, depending on drawable width and height
-  -> QDiagram Cairo R2 m -- ^ Diagram
+  -> (Int -> Int -> Options Cairo V2 Double) -- ^ options, depending on drawable width and height
+  -> QDiagram Cairo V2 Double m -- ^ Diagram
   -> IO ()
 renderDoubleBuffered drawable renderOpts diagram = do
   (w,h) <- drawableGetSize drawable
