@@ -1,3 +1,11 @@
+1.3
+--------------------
+
+* Updates for diagrams 1.3:
+  - allow base-4.8
+  - require diagrams-lib-1.3
+  - require diagrams-cairo-1.3
+
 1.0.1.3 (8 Sept 2014)
 ---------------------
 
@@ -8,7 +16,7 @@
 
 * Require `diagrams-lib-1.2` and `diagrams-cairo-1.2`
 
-1.0.1.1: 2 Junw 2014
+1.0.1.1: 2 June 2014
 -------------------
 
 * Allow `diagrams-lib-1.2`
