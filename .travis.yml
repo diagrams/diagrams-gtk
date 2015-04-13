@@ -16,7 +16,7 @@ env:
 matrix:
   allow_failures:
     - env: HPVER=2013.2.0.0 CABALVER=1.18
-    - env: GHCVER=head
+    - env: GHCVER=head CABALVER=head
 
 before_install:
   - git clone http://github.com/diagrams/diagrams-travis travis
