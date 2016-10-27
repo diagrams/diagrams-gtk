@@ -1,3 +1,10 @@
+1.4 (XXX)
+---------
+
+* Updates for diagrams 1.4:
+  - allow diagrams-lib-1.4
+  - allow diagrams-cairo-1.4
+
 1.3.0.2 (16 June 2016)
 ----------------------
 
