@@ -1,5 +1,5 @@
-1.4 (XXX)
----------
+1.4 (2016-10-26)
+----------------
 
 * Updates for diagrams 1.4:
   - allow diagrams-lib-1.4
