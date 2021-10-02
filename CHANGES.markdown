@@ -1,3 +1,10 @@
+1.4-r4 (2021-10-02)
+-------------------
+
+- allow up to `base-4.15`
+- Test on GHC 8.10; GHC 9.0 does not work yet due to `cairo` package.
+- Drop support for GHC 8.2.
+
 1.4-r3 (2019-01-13)
 -------------------
 
