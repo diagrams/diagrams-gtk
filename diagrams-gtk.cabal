@@ -12,7 +12,7 @@ copyright:           John Lato
 category:            Graphics
 build-type:          Simple
 cabal-version:       >=1.10
-tested-with:         GHC ==8.4.4 || ==8.6.5 || ==8.8.4 || ==8.10.4
+tested-with:         GHC ==8.8.4 || ==8.10.7 || ==9.0.2 || ==9.2.7
 extra-source-files:  CHANGES.markdown, README.markdown
 
 source-repository head
